@@ -1,0 +1,44 @@
+@* addChartForm defined above is the parameter passed to this view by the controller *@
+@import helper._
+
+@(addChartForm: play.data.Form[models.Chart], user: models.users.User, env: play.api.Environment)
+
+@* helpers will be used to create the form dynamically, though static HTML form element also work. *@
+
+@admin.adminMain("Add Chart", user) {
+	<h3>Add a new Chart</h3>
+	
+	@form(action = routes.AdminController.addChartSubmit(), 'class -> "form-horizontal",
+		'role->"form", 'enctype -> "multipart/form-data") {
+		
+		@inputText(addChartForm("song"), '_label -> "Song",'class -> "form-control")
+		@inputText(addChartForm("artist"), '_label -> "Artist",'class -> "form-control")
+        @inputText(addChartForm("releaseDate"), '_label -> "Release Date",'class -> "form-control")
+		
+        <div class="container-fluid">
+			<div class="row">
+				<label>Image</label>
+			</div>
+
+			<div class="row">
+				@if(env.resource("public/images/chartImages/thumbnails/" + addChartForm("id").value() + ".jpg").isDefined) {
+					<p><img src="/assets/images/chartImages/thumbnails/@(addChartForm("id").value() + ".jpg")"/></p>
+				} else {
+					<p><img src="/assets/images/chartImages/thumbnails/noImage.png"/></p>
+				}
+			</div>
+			
+            <div class="row">
+				<input class="btn-sm btn-default" type="file" name="upload">
+			</div>
+		</div>
+
+		@inputText(addChartForm("id"), '_label -> "", 'hidden -> "hidden")
+
+  <div class="actions">
+      <input type="submit" value="Save" class="btn btn-primary">
+			<a href="@routes.AdminController.charts()"><button class="btn btn-warning">Cancel</button>
+	  		</a>
+  </div>
+	}
+}
