@@ -1,0 +1,31 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# An example controller showing a sample home page
+
+#######################
+# Puvlic Site  Routes #
+#######################
+
+GET     /charts                 controllers.HomeController.charts()
+
+
+################
+# Admin Routes #
+################
+
+# charts# accepts a parameter default to 0 (Long)
+GET     /admin/charts               controllers.AdminController.charts(cat:Long ?=0L)
+
+# Request to load the add chart form
+GET     /admin/addChart                  controllers.AdminController.addChart
+
+# Data submitted by the form
+POST    /admin/addChartSubmit            controllers.AdminController.addChartSubmit
+
+# Delete a chart by an id passed as a parameter
+GET    /admin/delChart/:id               controllers.AdminController.deleteChart(id: Long)
+
+# Update a chart by id
+GET	    /admin/updateChart/:id        controllers.AdminController.updateChart(id: Long)
