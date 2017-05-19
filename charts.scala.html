@@ -1,27 +1,30 @@
-@(Charts: List[models.Chart], Charts: List[models.Chart], user: models.users.User, env: play.api.Environment)
+@(charts: List[models.Chart], user: models.users.User)
 
-@admin.adminMain("Charts", user) {
-
+<!-- Pass page title, user, and content {html between braces} to the main view -->
+@main("Charts", user) {
+  <!-- HTML content for the index view -->
   <div class="row">
-      <div class="col-sm-2">
+      <div class="col-sm-12">
+        <div class="well">
           <h4>Charts</h4>
-            <div class="well">
-                <a href="@routes.AdminController.charts(0)" class="well-item">All categories</a>
-                    <a href="@routes.AdminController.charts(c.getId)" class="list-group-item">@c.getName
-                      <span class="badge">@c.getCharts.size()</span>
-                    </a>
-                }
-            </div>
-      </div>
+            <a href="@routes.HomeController.charts(0)" class="well">All </a>
+            @for(c <- charts) {
+              <a href="@routes.HomeController.charts(c.getId)" class="well-item">@c.getName
+                <span class="badge">@c.getCharts.size()</span>
+            </a>
+          }
+        </div>
+      <\div>
         <div class="col-sm-10">
+
           @if(flash.containsKey("success")) {
               <div class="alert alert-success">
               @flash.get("success")
               </div>
           }
-          <table class="table table-bordered table-hover table-condensed">
-          <thead>
-
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+          <!-- The header row-->
           <tr>
             <th>Image</th>
             <th>Song</th>
@@ -30,45 +33,23 @@
           </tr>
           </thead>
           <tbody>
-
           @for(c <- charts) {
-			    <tr>
-                    @if(env.resource("public/images/chartImages/thumbnails/" + c.getId + ".jpg").isDefined) {
-                        <td><img src="/assets/images/chartImages/thumbnails/@(c.getId).jpg"/></td>
-                    } else {
-                        <td><img src="/assets/images/chartImages/thumbnails/noImage.png"/></td>
-                    }
-                    
-                    <td>c.getSong</td>
-                    <td>c.getArtist</td>
-                    <td>c.getReleaseDate</td>
-
-                    <td>
-                      <a href="@routes.AdminController.updateChart(c.getId)" class="btn-xs btn-danger">
-                      <span class="glyphicon glyphicon-pencil"></span></a>
-                    </td>
-
-                  <td>
-                      <a href="@routes.AdminController.deleteChart(c.getId)" class="btn-xs btn-danger"
-                        onclick="return confirmDel();">
-                        <span class="glyphicon glyphicon-trash"></span>
-                      </a>
-                  </td>
-				</tr>
-					}
+            <tr>@if(env.resource("public/images/chartImages/thumbnails/" + c.getId + ".jpg").isDefined) {
+                      <td><img src="/assets/images/chartImages/thumbnails/@(c.getId + ".jpg")"/></td>
+                  } else {
+                      <td><img src="/assets/images/chartImages/thumbnails/noImage.png"/></td>
+                  }
+              <td class="numeric">@c.getId</td>
+              <td>@c.getSong</td>
+              <td>@c.getArtist</td>
+              <td>@c.getRelease</td>
+              <td><a href="@routes.HomeController.index"  class="btn btn-default btn-xs"><span class="glyphicon glyphicon-shopping-cart"></span></a></td>
+            </tr>
+          }
           </tbody>
-        </table>
-
-               <p>
-          <a href="@routes.AdminController.addChart()">
-            <button class="btn btn-primary">Add a Chart</button>
-          </a>
-        </p>
+          </table>
+      </div>
       </div>
   </div>
+}
 
-  <script>
-    function confirmDel() {
-        return confirm('Are you sure?');
-    }
-  </script>
